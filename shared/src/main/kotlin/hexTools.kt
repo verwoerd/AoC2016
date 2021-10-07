@@ -1,11 +1,5 @@
 import kotlin.experimental.and
 
-/*
- * Copyright (c) 2021 Keystone Strategic b.v.
- *
- * All rights reserved.
- */
-
 /**
  * @author verwoerd
  * @since 06-10-21
