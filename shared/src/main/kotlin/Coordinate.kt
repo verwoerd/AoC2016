@@ -54,3 +54,5 @@ fun adjacentCircularCoordinates(origin: Coordinate) = sequenceOf(
   Coordinate(origin.x, origin.y + 1),
   Coordinate(origin.x, origin.y - 1)
                                                                 )
+fun Coordinate.isInRange(start:Coordinate, endInclusive: Coordinate) =
+  x >= start.x && y >= start.x && x <= endInclusive.x && y <= endInclusive.y
