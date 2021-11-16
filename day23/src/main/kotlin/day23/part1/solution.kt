@@ -1,24 +1,20 @@
-package day12.part1
+package day23.part1
 
+import day12.part1.*
 import java.io.BufferedReader
 
 /**
  * @author verwoerd
- * @since 05/10/2021
+ * @since 16/11/2021
  */
-fun part1(input: BufferedReader): Any {
-  val program = input.readLines()
-  val computer = Computer()
-  computer.execute(program)
+fun part1(input: BufferedReader, a: Int = 7): Any {
+  val computer = Computer(a)
+  computer.execute(input.lineSequence().toMutableList())
   return computer.a
 }
 
-
-val COPY_REGEX_CONST = Regex("cpy (-\\d+) (\\w)")
-val COPY_REGEX_REGISTER = Regex("cpy (\\w) (\\w)")
-val INC_REGEX = Regex("inc (\\w)")
-val DEC_REGEX = Regex("dec (\\w)")
-val JNZ_REGEX = Regex("jnz (\\w) (-?\\d+)")
+val TOGGLE_REGEX = Regex("tgl (\\w+)")
+val JNZ_REGISTER_REGEX = Regex("jnz (\\w) (\\w)")
 
 data class Computer(
   var a: Int = 0,
@@ -26,7 +22,7 @@ data class Computer(
   var c: Int = 0,
   var d: Int = 0
 ) {
-  fun execute(program: List<String>) {
+  fun execute(program: MutableList<String>) {
     var pc = 0
     while (pc < program.size) {
       val instruction = program[pc]
@@ -55,6 +51,30 @@ data class Computer(
             continue
           }
         }
+        JNZ_REGISTER_REGEX.matches(instruction) -> {
+          val (_, left, right) = JNZ_REGISTER_REGEX.matchEntire(instruction)!!.groupValues
+          if(getRegister(left) != 0) {
+            pc += getRegister(right)
+            continue
+          }
+        }
+        TOGGLE_REGEX.matches(instruction) -> {
+          val(_, a) = TOGGLE_REGEX.matchEntire(instruction)!!.groupValues
+          val line =pc + getRegister(a)
+          println("Toggline line $line")
+          if(line in program.indices) {
+            val operation = program[line]
+            program[line] = when(operation.take(3)) {
+              "inc" -> "dec"
+              "dec" -> "inc"
+              "jnz" -> "cpy"
+              "cpy" -> "jnz"
+              "tgl" -> "inc"
+              else -> error("invalid oepration toggle $operation")
+            } + operation.drop(3)
+          }
+        }
+        else -> println("skipping instruction")
       }
       pc++
     }
@@ -66,7 +86,7 @@ data class Computer(
       "b" -> b = value
       "c" -> c = value
       "d" -> d = value
-      else -> error("Invalid register $name")
+//      else -> error("Invalid register $name")
     }
   }
 
@@ -77,5 +97,4 @@ data class Computer(
     "d" -> d
     else -> name.toInt()
   }
-
 }
