@@ -14,7 +14,7 @@ fun part1(input: BufferedReader): Any {
 }
 
 
-val COPY_REGEX_CONST = Regex("cpy (-\\d+) (\\w)")
+val COPY_REGEX_CONST = Regex("cpy (-?\\d+) (\\w)")
 val COPY_REGEX_REGISTER = Regex("cpy (\\w) (\\w)")
 val INC_REGEX = Regex("inc (\\w)")
 val DEC_REGEX = Regex("dec (\\w)")
