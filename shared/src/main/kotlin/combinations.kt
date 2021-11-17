@@ -17,3 +17,21 @@ fun <T> nonRepeatingPermutations(length: Int, components: Collection<T>): List<L
   else nonRepeatingPermutations(length - 1, components).flatMap { sublist ->
     components.filter { it !in sublist }.map { sublist + it }
   }
+
+fun <T> allPermutations(set: Set<T>): Set<List<T>> {
+  if (set.isEmpty()) return emptySet()
+
+   return realAllPermutations(set.toList())
+}
+
+private fun <T> realAllPermutations(list: List<T>): Set<List<T>> {
+  if (list.isEmpty()) return setOf(emptyList())
+
+  val result: MutableSet<List<T>> = mutableSetOf()
+  for (i in list.indices) {
+    realAllPermutations(list - list[i]).forEach{
+        item -> result.add(item + list[i])
+    }
+  }
+  return result
+}
